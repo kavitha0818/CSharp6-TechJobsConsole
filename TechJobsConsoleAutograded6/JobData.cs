@@ -18,24 +18,6 @@ namespace TechJobsConsoleAutograded6
          * Returns a list of all values contained in a given column,
          * without duplicates. 
          */
-        public static List<string> FindAll(string column)
-        {
-            LoadData();
-
-            List<string> values = new List<string>();
-
-            foreach (Dictionary<string, string> job in AllJobs)
-            {
-                string aValue = job[column];
-
-                if (!values.Contains(aValue))
-                {
-                    values.Add(aValue);
-                }
-            }
-
-            return values;
-        }
 
         /**
          * Search all columns for the given term
@@ -47,7 +29,29 @@ namespace TechJobsConsoleAutograded6
             // load data, if not already loaded
             LoadData();
 
-            return null;
+            // List to store results
+            List<Dictionary<string, string>> results = new List<Dictionary<string, string>>();
+
+            // Iterate through each job dictionary
+            foreach (Dictionary<string, string> job in AllJobs)
+            {
+                // Iterate through each key-value pair in the job dictionary
+                foreach (KeyValuePair<string, string> keyvaluepair in job)
+                {
+                    // Check if the value of any key contains the search term (case-insensitive)
+                    if (keyvaluepair.Value.ToLower().Contains(value.ToLower()))
+                    {
+                        // Check if the job is already in the results to avoid duplicates
+                        if (!results.Contains(job))
+                        {
+                            results.Add(job);
+                        }
+                        break; // Break the inner loop since the job is already added
+                    }
+                }
+            }
+
+            return results;
         }
 
         /**
@@ -57,11 +61,13 @@ namespace TechJobsConsoleAutograded6
          * For example, searching for employer "Enterprise" will include results
          * with "Enterprise Holdings, Inc".
          */
+
+         //return a list of dictionaries
         public static List<Dictionary<string, string>> FindByColumnAndValue(string column, string value)
         {
             // load data, if not already loaded
             LoadData();
-
+         // This line declares anew list name jobs
             List<Dictionary<string, string>> jobs = new List<Dictionary<string, string>>();
 
             foreach (Dictionary<string, string> row in AllJobs)
@@ -70,7 +76,7 @@ namespace TechJobsConsoleAutograded6
 
 
                 //TODO: Make search case-insensitive
-                if (aValue.Contains(value))
+                if (aValue.ToLower().Contains(value.ToLower()))
                 {
                     jobs.Add(row);
                 }
@@ -102,7 +108,7 @@ namespace TechJobsConsoleAutograded6
                     {
                         rows.Add(rowArrray);
                     }
-                }
+                } 
             }
 
             string[] headers = rows[0];
@@ -125,7 +131,9 @@ namespace TechJobsConsoleAutograded6
 
         /*
          * Parse a single line of a CSV file into a string array
-         */
+         */ 
+
+
         private static string[] CSVRowToStringArray(string row, char fieldSeparator = ',', char stringSeparator = '\"')
         {
             bool isBetweenQuotes = false;
@@ -159,6 +167,10 @@ namespace TechJobsConsoleAutograded6
 
             return rowValues.ToArray();
         }
-    }
-}
 
+        internal static List<string> FindAll(string columnChoice)
+        {
+            throw new NotImplementedException();
+        }
+    }
+};
